@@ -59,13 +59,27 @@ async def answer_q3(message: types.Message, state: FSMContext):
     import string
     file_name = ''.join(random.choice(string.ascii_lowercase) for i in range(16))
     # Достаем переменные
+        # проверка на то, что отправили именно фото
     document = message.document
+    tupes = ["image/bmp", 
+            "image/jpeg", 
+            "image/png", 
+            "image/x-citrix-jpeg",
+            "image/x-citrix-png",
+            "image/x-png",
+            "image/x-ms-bmp"
+            ]
+    if not(document["mime_type"] in tupes):
+        await state.finish()
+        #print(document["mime_type"])
+        await message.answer("Недопустимый формат файла")
+        return None
+    # Достаем переменные
     await message.document.download(file_name+'.bmp')
     data = await state.get_data()
     answer1 = data.get("answer1")
     await message.answer("Подождите.\n"
                         "Ваше фото находиться в обработке.")
-
     # расшифровка
     solved = solve_decrypt(file_name+'.bmp', answer1)
     if solved =="Error":
@@ -73,6 +87,5 @@ async def answer_q3(message: types.Message, state: FSMContext):
     else:
         await message.answer(solved)    
         await message.answer("Ваше сообщение было успешно расшифровано!")
-    
-    # Вариант 1
+    # Выходим из текущего состояния
     await state.finish()

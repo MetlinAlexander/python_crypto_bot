@@ -84,12 +84,14 @@ def to_encode(name, user_text, password):
         r, g, b = rgb_im.getpixel((x, y)) #узнаём значение пикселя
         new_rgb = make_new_rgb(text_tuple[i], red=r, green=g, blue=b) # шифруем в пиксель часть инфы
         draw.point((x, y), new_rgb) # перекрашиваем пиксель в новый цвет
-    rgb_im.save("total.bmp", "bmp")  # сохраняем результат
+    
     # удалением ненужный файл
     import os
     os.remove(name)
+    # сохраняем результат
+    rgb_im.save(name, "bmp")
     # Возвращаем результат
-    return open("total.bmp", "rb")
+    return open(name, "rb")
 def solve_encrypt(put, toxt, pessword):
     try:
         return to_encode(put, toxt, pessword)

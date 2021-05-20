@@ -62,7 +62,7 @@ async def answer_q3(message: types.Message, state: FSMContext):
         await message.answer("Ваше сообщение было успешно зашифровано!")
     # удалением ненужный файл
     import os
-    os.remove("total.bmp")
+    os.remove(file_name+".bmp")
     # Вариант 1
     await state.finish()
 
@@ -72,6 +72,21 @@ async def answer_q3(message: types.Message, state: FSMContext):
     import random
     import string
     file_name = ''.join(random.choice(string.ascii_lowercase) for i in range(16))
+    # проверка на то, что отправили именно фото
+    document = message.document
+    tupes = ["image/bmp", 
+            "image/jpeg", 
+            "image/png", 
+            "image/x-citrix-jpeg",
+            "image/x-citrix-png",
+            "image/x-png",
+            "image/x-ms-bmp"
+            ]
+    if not(document["mime_type"] in tupes):
+        await state.finish()
+        #print(document["mime_type"])
+        await message.answer("Недопустимый формат файла")
+        return None
     # Достаем переменные
     await message.document.download(file_name+".bmp")
     data = await state.get_data()
@@ -80,7 +95,6 @@ async def answer_q3(message: types.Message, state: FSMContext):
     print(answer1, answer2)
     await message.answer("Подождите.\n"
                         "Ваше фото находиться в обработке.")
-
     # шифрование
     solved = solve_encrypt(file_name+".bmp", answer1, answer2)
     if isinstance(solved, str):
@@ -90,6 +104,6 @@ async def answer_q3(message: types.Message, state: FSMContext):
         await message.answer("Ваше сообщение было успешно зашифровано!")
     # удалением ненужный файл
     import os
-    os.remove("total.bmp")
-    # Вариант 1
+    os.remove(file_name+".bmp")
+    # Выходим из текущего состояния
     await state.finish()
