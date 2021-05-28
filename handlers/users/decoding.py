@@ -8,10 +8,8 @@ from decrypt import solve_decrypt
 
 @dp.message_handler(Text(equals=["Расшифровать"]))
 async def enter_test(message: types.Message):
-    await message.answer("Вы начали процесс расшифрования.\n"
-                         "Сначала отправте пароль по которому происходило шифрование."
-                         )
-
+    await message.answer("Вы начали процесс расшифрования.")
+    await message.answer("Сначала отправте пароль, по которому происходило шифрование.")
     # Вариант 1 - с помощью функции сет
     await Decode.Q_password.set()
 
@@ -22,35 +20,14 @@ async def answer_q1(message: types.Message, state: FSMContext):
     await state.update_data(answer1=answer)
 
     await message.answer("Теперь отправте фото, \n"
-                         "куда было зашифровано сообщение.\n"
-                         "Совет: отправляйте только исходный файл фото,\n" 
-                         "т.к. в противном случае сообщение не будет расшифровано.\n"
-                         "Т.е. лучше отправить фото как документ"
+                         "куда было зашифровано сообщение."
                          )
     await Decode.next()
 
 @dp.message_handler(state=Decode.Q_photo, content_types=['photo'])
 async def answer_q3(message: types.Message, state: FSMContext):
-    # генерация имени файла
-    import random
-    import string
-    file_name = ''.join(random.choice(string.ascii_lowercase) for i in range(16))
-    # Достаем переменные
-    await message.photo[-1].download(file_name+'.bmp')
-    data = await state.get_data()
-    answer1 = data.get("answer1")
-    await message.answer("Подождите.\n"
-                        "Ваше фото находиться в обработке.")
-
-    # расшифровака
-    solved = solve_decrypt(file_name+'.bmp', answer1)
-    if solved =="Error":
-        await message.answer("При расшифровки произошла ошибка.")
-    else:
-        await message.answer(solved)    
-        await message.answer("Ваше сообщение было успешно расшифровано!")
-    # Вариант 1
-    await state.finish()
+    # Даем совет пользователю
+    await message.answer("Совет: отправте изображение как файл")
 
 @dp.message_handler(state=Decode.Q_photo, content_types=['document'])
 async def answer_q3(message: types.Message, state: FSMContext):
@@ -61,27 +38,24 @@ async def answer_q3(message: types.Message, state: FSMContext):
     # Достаем переменные
         # проверка на то, что отправили именно фото
     document = message.document
-    tupes = ["image/bmp", 
-            "image/jpeg", 
-            "image/png", 
-            "image/x-citrix-jpeg",
+    tupes = ["image/png", 
             "image/x-citrix-png",
-            "image/x-png",
-            "image/x-ms-bmp"
+            "image/x-png"
             ]
     if not(document["mime_type"] in tupes):
-        await state.finish()
+        print("stop")
+        #await state.finish()
         #print(document["mime_type"])
         await message.answer("Недопустимый формат файла")
         return None
     # Достаем переменные
-    await message.document.download(file_name+'.bmp')
+    await message.document.download(file_name+'.png')
     data = await state.get_data()
     answer1 = data.get("answer1")
     await message.answer("Подождите.\n"
                         "Ваше фото находиться в обработке.")
     # расшифровка
-    solved = solve_decrypt(file_name+'.bmp', answer1)
+    solved = solve_decrypt(file_name+'.png', answer1)
     if solved =="Error":
         await message.answer("При расшифровки произошла ошибка.")
     else:

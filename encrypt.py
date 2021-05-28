@@ -89,7 +89,7 @@ def to_encode(name, user_text, password):
     import os
     os.remove(name)
     # сохраняем результат
-    rgb_im.save(name, "bmp")
+    rgb_im.save(name, "png")
     # Возвращаем результат
     return open(name, "rb")
 def solve_encrypt(put, toxt, pessword):
