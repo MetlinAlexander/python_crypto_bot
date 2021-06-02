@@ -9,21 +9,17 @@ from encrypt import solve_encrypt
 @dp.message_handler(Text(equals=["Шифровать"]))
 async def enter_test(message: types.Message):
     await message.answer("Вы начали процесс шифрования.")
-    await message.answer("Сначала отправте ваще сообщение.\n"
-                         "Максимальная длина сообщения 1000 символов."
-                         )
-
+    await message.answer("Сначала отправте ваще сообщение.")
     # Меняем состояние
     await Encode.Q_message.set()
 
 @dp.message_handler(state=Encode.Q_message)
 async def answer_q1(message: types.Message, state: FSMContext):
     answer = message.text
-    # Вариант 1 сохранения переменных - записываем через key=var
+    # сохранения переменных - записываем через key=var
     await state.update_data(answer1=answer)
 
-    await message.answer("Теперь отправте ваш пароль,\n"
-                         "по которому будет происходить шифрование")
+    await message.answer("Теперь отправте пароль")
     # Меняем состояние
     await Encode.next()
 

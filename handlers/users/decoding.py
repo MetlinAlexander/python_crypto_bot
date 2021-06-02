@@ -9,7 +9,7 @@ from decrypt import solve_decrypt
 @dp.message_handler(Text(equals=["Расшифровать"]))
 async def enter_test(message: types.Message):
     await message.answer("Вы начали процесс расшифрования.")
-    await message.answer("Сначала отправте пароль, по которому происходило шифрование.")
+    await message.answer("Сначала отправте пароль")
     # Вариант 1 - с помощью функции сет
     await Decode.Q_password.set()
 
