@@ -9,17 +9,21 @@ from encrypt import solve_encrypt
 @dp.message_handler(Text(equals=["Шифровать"]))
 async def enter_test(message: types.Message):
     await message.answer("Вы начали процесс шифрования.")
-    await message.answer("Сначала отправте ваще сообщение.")
+    await message.answer("Сначала отправьте ваше сообщение.")
     # Меняем состояние
     await Encode.Q_message.set()
 
 @dp.message_handler(state=Encode.Q_message)
 async def answer_q1(message: types.Message, state: FSMContext):
     answer = message.text
+    if answer == "Расшифровать" or answer == "Шифровать":
+        await state.finish()
+        await message.answer("Действие отменено.")
+        return None
     # сохранения переменных - записываем через key=var
     await state.update_data(answer1=answer)
 
-    await message.answer("Теперь отправте пароль")
+    await message.answer("Теперь отправьте пароль")
     # Меняем состояние
     await Encode.next()
 
@@ -27,6 +31,11 @@ async def answer_q1(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Encode.Q_password)
 async def answer_q2(message: types.Message, state: FSMContext):
     answer2 = message.text
+    if answer2 == "Расшифровать" or answer2 == "Шифровать":
+        await state.finish()
+        await message.answer("Действие отменено.")
+        return None
+
     await state.update_data(answer2=answer2)
 
     await message.answer("И последнее, что осталось\n"
@@ -34,6 +43,15 @@ async def answer_q2(message: types.Message, state: FSMContext):
     # Меняем состояние
     await Encode.next()
 
+@dp.message_handler(state=Encode.Q_photo)
+async def answer_q2(message: types.Message, state: FSMContext):
+    answer3 = message.text
+    if answer3 == "Расшифровать" or answer3 == "Шифровать":
+        await state.finish()
+        await message.answer("Действие отменено.")
+        return None
+    await message.answer("отправте фото!")
+    
 @dp.message_handler(state=Encode.Q_photo, content_types=['photo'])
 async def answer_q3(message: types.Message, state: FSMContext):
     # генерация имени файла

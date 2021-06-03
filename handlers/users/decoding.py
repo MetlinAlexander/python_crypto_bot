@@ -9,25 +9,38 @@ from decrypt import solve_decrypt
 @dp.message_handler(Text(equals=["Расшифровать"]))
 async def enter_test(message: types.Message):
     await message.answer("Вы начали процесс расшифрования.")
-    await message.answer("Сначала отправте пароль")
+    await message.answer("Сначала отправьте пароль")
     # Вариант 1 - с помощью функции сет
     await Decode.Q_password.set()
 
 @dp.message_handler(state=Decode.Q_password)
 async def answer_q1(message: types.Message, state: FSMContext):
     answer = message.text
+    if answer == "Расшифровать" or answer == "Шифровать":
+        await state.finish()
+        await message.answer("Действие отменено.")
+        return None
     # Вариант 1 сохранения переменных - записываем через key=var
     await state.update_data(answer1=answer)
 
-    await message.answer("Теперь отправте фото, \n"
+    await message.answer("Теперь отправьте фото, \n"
                          "куда было зашифровано сообщение."
                          )
     await Decode.next()
 
+@dp.message_handler(state=Decode.Q_photo)
+async def answer_q2(message: types.Message, state: FSMContext):
+    answer3 = message.text
+    if answer3 == "Расшифровать" or answer3 == "Шифровать":
+        await state.finish()
+        await message.answer("Действие отменено.")
+        return None
+    await message.answer("отправьте фото!")
+
 @dp.message_handler(state=Decode.Q_photo, content_types=['photo'])
 async def answer_q3(message: types.Message, state: FSMContext):
     # Даем совет пользователю
-    await message.answer("Совет: отправте изображение как файл")
+    await message.answer("Совет: отправьте изображение как файл")
 
 @dp.message_handler(state=Decode.Q_photo, content_types=['document'])
 async def answer_q3(message: types.Message, state: FSMContext):
