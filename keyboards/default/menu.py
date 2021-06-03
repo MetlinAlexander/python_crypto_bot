@@ -4,9 +4,11 @@ menu = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text="Шифровать"),
+            KeyboardButton(text="Расшифровать")
         ],
         [
-            KeyboardButton(text="Расшифровать"),
+            
+            KeyboardButton(text="/cancel"),
             KeyboardButton(text="/help")
         ],
     ],
