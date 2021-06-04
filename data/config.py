@@ -1,6 +1,6 @@
 from environs import Env
 
-# Теперь используем вместо библиотеки python-dotenv библиотеку environs
+# Получаем значение пременых
 env = Env()
 env.read_env()
 
