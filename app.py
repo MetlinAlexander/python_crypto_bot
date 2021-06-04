@@ -4,7 +4,7 @@ from loader import dp
 import middlewares, handlers
 from utils.set_bot_commands import set_default_commands
 
-
+# главный файл программы
 async def on_startup(dispatcher):
     # Устанавливаем дефолтные команды
     await set_default_commands(dispatcher)

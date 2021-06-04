@@ -4,9 +4,9 @@ from aiogram.dispatcher.filters import Command, Text
 from loader import dp
 from states.encode import Encode
 from encrypt import solve_encrypt
+# здесь происходит шифровка
 
-# @dp.message_handler(Command("test"), state=None)
-@dp.message_handler(Text(equals=["Шифровать"]))
+@dp.message_handler(Text(equals=["Шифровать"])) # Реагирует на слово Шифровать
 async def enter_test(message: types.Message):
     await message.answer("Вы начали процесс шифрования.")
     await message.answer("Сначала отправьте ваше сообщение.")
@@ -16,6 +16,7 @@ async def enter_test(message: types.Message):
 @dp.message_handler(state=Encode.Q_message)
 async def answer_q1(message: types.Message, state: FSMContext):
     answer = message.text
+    # Проверка на отмену
     if answer == "Расшифровать" or answer == "Шифровать":
         await state.finish()
         await message.answer("Действие отменено.")
@@ -31,11 +32,12 @@ async def answer_q1(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Encode.Q_password)
 async def answer_q2(message: types.Message, state: FSMContext):
     answer2 = message.text
+    # Проверка на отмену
     if answer2 == "Расшифровать" or answer2 == "Шифровать":
         await state.finish()
         await message.answer("Действие отменено.")
         return None
-
+    # сохранения переменных - записываем через key=var
     await state.update_data(answer2=answer2)
 
     await message.answer("И последнее, что осталось\n"
@@ -46,10 +48,12 @@ async def answer_q2(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Encode.Q_photo)
 async def answer_q2(message: types.Message, state: FSMContext):
     answer3 = message.text
+    # Проверка на отмену
     if answer3 == "Расшифровать" or answer3 == "Шифровать":
         await state.finish()
         await message.answer("Действие отменено.")
         return None
+    # совет пользователю
     await message.answer("отправте фото!")
     
 @dp.message_handler(state=Encode.Q_photo, content_types=['photo'])
@@ -74,7 +78,7 @@ async def answer_q3(message: types.Message, state: FSMContext):
     else:
         await message.answer_document(document=solved)
         await message.answer("Ваше сообщение было успешно зашифровано!")
-    # удалением ненужный файл
+    # удаляем ненужный файл
     import os
     os.remove(file_name+".png")
     # Завершаем текущие состояние

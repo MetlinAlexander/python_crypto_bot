@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters.builtin import CommandHelp
 from aiogram.dispatcher.filters import Command
 from loader import dp
 
-
+# хендлер реагирующий на команду /instruction
 @dp.message_handler(Command("instruction"))
 async def bot_help(message: types.Message):
     text = """

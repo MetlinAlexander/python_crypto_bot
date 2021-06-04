@@ -1,5 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-
+# создаем клавиатуру
 menu = ReplyKeyboardMarkup(
     keyboard=[
         [

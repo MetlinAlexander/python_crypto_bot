@@ -1,6 +1,6 @@
 from environs import Env
 
-# Получаем значение пременых
+# Получаем значение переменых
 env = Env()
 env.read_env()
 

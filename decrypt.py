@@ -1,3 +1,4 @@
+# файл с функциями для расшифровки
 def to_decode(name, password):
     def norm_pass(ps): # функция переводит пароль в нормальный вид
         norm = 0

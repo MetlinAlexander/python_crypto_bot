@@ -1,5 +1,5 @@
 from aiogram import types
-
+# добавляем команды для доступа через /
 async def set_default_commands(dp):
     await dp.bot.set_my_commands(
         [

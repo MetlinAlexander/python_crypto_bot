@@ -1,3 +1,4 @@
+# файл с функциями для шифровки
 def to_encode(name, user_text, password):
     def norm_pass(ps): # функция переводит пароль в нормальный вид
         norm = 0
